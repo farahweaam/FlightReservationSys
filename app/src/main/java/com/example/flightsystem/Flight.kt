@@ -11,7 +11,7 @@ import java.time.LocalDateTime
 data class Flight(
     @PrimaryKey(autoGenerate = true) val id:Int = 0,
     val destination:String,
-    val departure_time: LocalDateTime,
+    val departure_time: Long,
     val airportId:Int,
     val planeId: Int,
     val aClassPrice:Double,
