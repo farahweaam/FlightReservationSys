@@ -26,17 +26,67 @@ import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 import java.time.ZoneId
 
+//sama
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        val db = Room.databaseBuilder(
-            applicationContext,
-            FlightDatabase::class.java,
-            "flight_db"
-        ).build()
+        val db = FlightDatabase.getInstance(applicationContext)
         val flightDao = db.flightDao()
 
+        /*sama(for testing AdminFlightsScreen)
+        lifecycleScope.launch(Dispatchers.IO) {
+
+            // Insert airports if the table is empty
+            if (db.airportDao().getAllAirports().isNullOrEmpty()) {
+
+                db.airportDao().insertAirport(
+                    Airport(
+                        name = "Cairo International",
+                        location = "Cairo"
+                    )
+                )
+
+                db.airportDao().insertAirport(
+                    Airport(
+                        name = "Dubai International",
+                        location = "Dubai"
+                    )
+                )
+            }
+
+            // Insert planes if the table is empty
+            if (db.planeDao().getAllPlanes().isNullOrEmpty()) {
+
+                db.planeDao().insertPlane(
+                    Plane(
+                        model = "Boeing 737",
+                        aClassSeats = 20,
+                        bClassSeats = 100,
+                        cClassSeats = 30,
+                        totalSeats = 150
+                    )
+                )
+
+                db.planeDao().insertPlane(
+                    Plane(
+                        model = "Airbus A320",
+                        aClassSeats = 15,
+                        bClassSeats = 105,
+                        cClassSeats = 30,
+                        totalSeats = 150
+                    )
+                )
+            }
+        }
+        setContent {
+            AdminFlightsScreen()
+        }*/
+
+        //Sama : original setcontent fn
         setContent {
             FlightSystemTheme {
                 Surface(
@@ -53,23 +103,23 @@ class MainActivity : ComponentActivity() {
                         // Run database tasks on an IO thread
                         kotlinx.coroutines.withContext(Dispatchers.IO) {
                             // Use system time in milliseconds directly (No java.time API level issues!)
-                            val timeInMillis = System.currentTimeMillis()
+                            //  val timeInMillis = System.currentTimeMillis()
 
-                            val testFlight = Flight(
-                                destination = "Cairo to Dubai",
-                                departure_time = timeInMillis,
-                                airportId = 1,
-                                planeId = 1,
-                                aClassPrice = 300.0,
-                                bClassPrice = 200.0,
-                                cClassPrice = 100.0
-                            )
-                            db.airportDao().insertAirport(Airport(id = 1, name = "Cairo International", "Cairo, Egypt"))
-                            db.planeDao().insertPlane(Plane(id = 1, model = "Boeing 737", 12, 15, 32, 59))
+//                            val testFlight = Flight(
+//                                destination = "Cairo to Dubai",
+//                                departure_time = timeInMillis,
+//                                airportId = 1,
+//                                planeId = 1,
+//                                aClassPrice = 300.0,
+//                                bClassPrice = 200.0,
+//                                cClassPrice = 100.0
+//                            )
+//                            db.airportDao().insertAirport(Airport(id = 1, name = "Cairo International", "Cairo, Egypt"))
+//                            db.planeDao().insertPlane(Plane(id = 1, model = "Boeing 737", 12, 15, 32, 59))
 
 
                             // Insert into database
-                            flightDao.insertFlight(testFlight)
+//                            flightDao.insertFlight(testFlight)
 
                             // Fetch updated list
                             val fetchedFlights = flightDao.getAllFlights()
@@ -88,13 +138,15 @@ class MainActivity : ComponentActivity() {
                             .padding(24.dp)
                     ) {
                         Text(
-                            text = "Flight Database Test",
+                            //text = "Flight Database Test",
+                            text = "Flight Reservation System",
                             style = MaterialTheme.typography.headlineMedium
                         )
                         Spacer(modifier = Modifier.height(16.dp))
 
                         if (flightList.isEmpty()) {
-                            Text(text = "Loading or empty database...")
+//                            Text(text = "Loading or empty database...")
+                            Text(text = "No flights available yet.")
                         } else {
                             for (flight in flightList) {
                                 Card(

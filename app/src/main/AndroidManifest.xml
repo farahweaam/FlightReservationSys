@@ -23,6 +23,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".AdminFlightsScreen.kt"
+            android:exported="false"
+            android:label="@string/title_activity_admin_flights_screen.kt"
+            android:theme="@style/Theme.FlightSystem"
+            android:windowSoftInputMode="adjustResize" />
     </application>
 
 </manifest>
