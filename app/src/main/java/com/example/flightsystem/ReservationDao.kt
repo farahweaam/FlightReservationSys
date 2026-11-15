@@ -20,8 +20,10 @@ interface ReservationDao {
     @Update
     suspend fun updateReservation(reservation: Reservation)
 
-    @Query("SELECT * FROM reservations WHERE userId = :uid AND flightId = :fid LIMIT 1")
-    suspend fun getReservationByUserAndFlight(uid: Int, fid: Int): Reservation?
     @Delete
     suspend fun deleteReservation(reservation: Reservation)
+    //maryam
+    @Query("SELECT * FROM reservations WHERE userId = :uid AND flightId = :fid LIMIT 1")
+    suspend fun getReservationByUserAndFlight(uid: Int, fid: Int): Reservation?
+
 }
