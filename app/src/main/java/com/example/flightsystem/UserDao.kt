@@ -9,7 +9,7 @@ import androidx.room.Query
 interface UserDao {
 
     @Insert
-    suspend fun insertUser(user: User)
+    suspend fun insertUser(user: User): Long
 
     @Query("SELECT * FROM users WHERE id= :id")
     suspend fun getUserByID(id: Int): User?

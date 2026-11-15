@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Admin::class, User::class, Airport::class, Flight::class, Plane::class, Reservation::class], version = 1)
+@Database(entities = [Admin::class, User::class, Airport::class, Flight::class, Plane::class, Reservation::class], version = 2)
 abstract class FlightDatabase: RoomDatabase() {
     abstract fun adminDao(): AdminDao
 

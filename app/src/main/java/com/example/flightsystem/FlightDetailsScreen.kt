@@ -123,25 +123,41 @@ fun FlightDetailsScreen(
                         isLoading = true
                         message = ""
 
+
                         try {
-                            withContext(Dispatchers.IO) {
-                                db.reservationDao().insertReservation(
-                                    Reservation(
-                                        userId = userId,
-                                        flightId = flight.id,
-                                        classType = selectedClass,
-                                        price = price
-                                    )
+                            val existingReservation = withContext(Dispatchers.IO) {
+                                db.reservationDao().getReservationByUserAndFlight(
+                                    userId,
+                                    flight.id
                                 )
                             }
 
-                            onReservationComplete()
+                            if (existingReservation != null) {
+
+                                message = "You have already booked this flight."
+
+                            } else {
+
+                                withContext(Dispatchers.IO) {
+                                    db.reservationDao().insertReservation(
+                                        Reservation(
+                                            userId = userId,
+                                            flightId = flight.id,
+                                            classType = selectedClass,
+                                            price = price
+                                        )
+                                    )
+                                }
+
+                                onReservationComplete()
+                            }
 
                         } catch (e: Exception) {
                             message = "Reservation failed: ${e.message}"
                         }
 
                         isLoading = false
+
                     }
                 }
             },

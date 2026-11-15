@@ -37,7 +37,100 @@ class MainActivity : ComponentActivity() {
         val db = FlightDatabase.getInstance(applicationContext)
         val flightDao = db.flightDao()
 
-        /*sama(for testing AdminFlightsScreen)
+        /*/ comment here
+       // maryam(testingggggg)
+
+lifecycleScope.launch(Dispatchers.IO) {
+
+    // 1. Insert airports if the table is empty
+    if (db.airportDao().getAllAirports().isNullOrEmpty()) {
+        db.airportDao().insertAirport(
+            Airport(
+                name = "Cairo International",
+                location = "Cairo"
+            )
+        )
+
+        db.airportDao().insertAirport(
+            Airport(
+                name = "Dubai International",
+                location = "Dubai"
+            )
+        )
+    }
+
+    // 2. Insert planes if the table is empty
+    if (db.planeDao().getAllPlanes().isNullOrEmpty()) {
+        db.planeDao().insertPlane(
+            Plane(
+                model = "Boeing 737",
+                aClassSeats = 20,
+                bClassSeats = 100,
+                cClassSeats = 30,
+                totalSeats = 150
+            )
+        )
+
+        db.planeDao().insertPlane(
+            Plane(
+                model = "Airbus A320",
+                aClassSeats = 15,
+                bClassSeats = 105,
+                cClassSeats = 30,
+                totalSeats = 150
+            )
+        )
+    }
+
+    // 3. Create a test user if it doesn't exist
+    var testUser = db.userDao()
+        .getUserByUsernameAndPassword("reservation_test", "test_hash")
+
+    if (testUser == null) {
+        db.userDao().insertUser(
+            User(
+                username = "reservation_test",
+                hashedpass = "test_hash"
+            )
+        )
+
+        testUser = db.userDao()
+            .getUserByUsernameAndPassword("reservation_test", "test_hash")
+    }
+
+    // 4. Insert a test flight if there are no flights
+    if (db.flightDao().getAllFlights().isEmpty()) {
+
+        val airport = db.airportDao().getAllAirports()!!.first()
+        val plane = db.planeDao().getAllPlanes()!!.first()
+
+        val testFlight = Flight(
+            destination = "Dubai",
+            departure_time = System.currentTimeMillis() +
+                    (24 * 60 * 60 * 1000),
+            airportId = airport.id,
+            planeId = plane.id,
+            aClassPrice = 300.0,
+            bClassPrice = 200.0,
+            cClassPrice = 100.0
+        )
+
+        db.flightDao().insertFlight(testFlight)
+    }
+
+    // 5. Open the user screen after inserting test data
+    withContext(Dispatchers.Main) {
+        setContent {
+            FlightSystemTheme {
+                UserHomeScreen(userId = testUser!!.id)
+            }
+        }
+    }
+}
+*/
+
+
+        /*/sama(for testing AdminFlightsScreen)
         lifecycleScope.launch(Dispatchers.IO) {
 
             // Insert airports if the table is empty
