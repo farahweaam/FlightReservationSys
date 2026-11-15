@@ -13,6 +13,7 @@ import androidx.compose.material3.*
 import androidx.compose.ui.Modifier
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 
 class UserHomeActivity : ComponentActivity() {
 
@@ -26,6 +27,7 @@ class UserHomeActivity : ComponentActivity() {
         }
     }
 }
+
 
 
 @Composable
@@ -42,22 +44,35 @@ fun UserHomeScreen(userId: Int) {
     Scaffold(
         bottomBar = {
             if (selectedFlight == null) {
-                Row(
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Button(
-                        onClick = { selectedTab = 0 },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("Available Flights")
-                    }
+                NavigationBar {
 
-                    Button(
+                    NavigationBarItem(
+                        selected = selectedTab == 0,
+                        onClick = { selectedTab = 0 },
+                        icon = {},
+                        label = { Text("Flights") }
+                    )
+
+                    NavigationBarItem(
+                        selected = selectedTab == 1,
                         onClick = { selectedTab = 1 },
-                        modifier = Modifier.weight(1f)
-                    ) {
-                        Text("My Reservations")
-                    }
+                        icon = {},
+                        label = { Text("Reservations") }
+                    )
+
+                    NavigationBarItem(
+                        selected = selectedTab == 2,
+                        onClick = { selectedTab = 2 },
+                        icon = {},
+                        label = { Text("Profile") }
+                    )
+
+                    NavigationBarItem(
+                        selected = selectedTab == 3,
+                        onClick = { selectedTab = 3 },
+                        icon = {},
+                        label = { Text("History") }
+                    )
                 }
             }
         }
@@ -85,21 +100,53 @@ fun UserHomeScreen(userId: Int) {
 
             } else {
 
-                if (selectedTab == 0) {
+                when (selectedTab) {
 
-                    AvailableFlightsScreen(
+                    0 -> AvailableFlightsScreen(
                         onFlightClick = { flight ->
                             selectedFlight = flight
                         }
                     )
 
-                } else {
+                    1 -> MyReservationsScreen(
+                        userId = userId
+                    )
 
-                    MyReservationsScreen(userId = userId)
+                    2 -> ProfilePlaceholderScreen()
 
+                    3 -> HistoryPlaceholderScreen()
                 }
             }
         }
     }
 }
+
+
+
+@Composable
+fun ProfilePlaceholderScreen() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Profile Screen - Coming Soon",
+            style = MaterialTheme.typography.titleLarge
+        )
+    }
+}
+
+@Composable
+fun HistoryPlaceholderScreen() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "Booking History - Coming Soon",
+            style = MaterialTheme.typography.titleLarge
+        )
+    }
+}
+
 
