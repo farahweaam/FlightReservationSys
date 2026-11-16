@@ -14,6 +14,10 @@ import androidx.compose.ui.Modifier
 import androidx.activity.compose.setContent
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
+//samaaa
+import android.content.Intent
+import androidx.compose.ui.platform.LocalContext
+
 
 class UserHomeActivity : ComponentActivity() {
 
@@ -32,6 +36,9 @@ class UserHomeActivity : ComponentActivity() {
 
 @Composable
 fun UserHomeScreen(userId: Int) {
+//samaaa
+    val context = LocalContext.current
+
 
     var selectedFlight by remember {
         mutableStateOf<Flight?>(null)
@@ -60,9 +67,15 @@ fun UserHomeScreen(userId: Int) {
                         label = { Text("Reservations") }
                     )
 
+                    //samaaaa
+
                     NavigationBarItem(
-                        selected = selectedTab == 2,
-                        onClick = { selectedTab = 2 },
+                        selected = false,
+                        onClick = {
+                            val intent = Intent(context, ProfileActivity::class.java)
+                            intent.putExtra("USER_ID", userId)
+                            context.startActivity(intent)
+                        },
                         icon = {},
                         label = { Text("Profile") }
                     )
@@ -148,5 +161,4 @@ fun HistoryPlaceholderScreen() {
         )
     }
 }
-
 
