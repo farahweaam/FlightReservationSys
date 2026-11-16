@@ -22,4 +22,8 @@ interface FlightDao {
 
     @Delete
     suspend fun deleteFlight(flight: Flight)
+
+    //maryam
+    @Query("SELECT * FROM flights WHERE id = :flightId")
+    suspend fun getFlightByID(flightId: Int): Flight?
 }
