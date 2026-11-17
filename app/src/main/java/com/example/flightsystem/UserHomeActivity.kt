@@ -136,8 +136,7 @@ fun UserHomeScreen(userId: Int) {
 
                     2 -> ProfilePlaceholderScreen()
 
-                    3 -> HistoryPlaceholderScreen()
-                }
+                    3 -> HistoryScreen(userId = userId)                }
             }
         }
     }
