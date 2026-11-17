@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Flight System</string>
+    <string name="title_activity_admin_flights_screen.kt">AdminFlightsScreen.kt</string>
 </resources>
