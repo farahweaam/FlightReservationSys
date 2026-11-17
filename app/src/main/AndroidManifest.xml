@@ -11,24 +11,29 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.FlightSystem">
+
+        <!-- First screen when the app opens -->
         <activity
-            android:name=".MainActivity"
+            android:name=".LoginActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.FlightSystem"
             android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <!--        samaaaaaa-->
+
+        <activity android:name=".MainActivity" android:exported="false" />
+        <activity android:name=".UserHomeActivity" android:exported="false" />
+        <activity android:name=".AdminHomeActivity" android:exported="false" />
+
+        <!-- samaaaaaa -->
         <activity
             android:name=".ProfileActivity"
             android:exported="false" />
 
-        <activity android:name=".AdminHomeActivity" android:exported="false" />
     </application>
 
 </manifest>

@@ -7,6 +7,7 @@ import androidx.room.Query
 
 @Dao
 interface AdminDao {
+
     @Insert
     suspend fun insertAdmin(admin: Admin)
 
@@ -20,4 +21,7 @@ interface AdminDao {
 
     @Delete
     suspend fun deleteUser(user: User)
+
+    @Query("SELECT * FROM admins WHERE username = :username LIMIT 1")
+    suspend fun getAdminByUsername(username: String): Admin?
 }
