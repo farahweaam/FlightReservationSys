@@ -28,7 +28,8 @@ class ProfileActivity : ComponentActivity() {
         val btnSave = findViewById<Button>(R.id.btnSaveProfile)
         val btnBack = findViewById<Button>(R.id.btnBack)
         val tvMessage = findViewById<TextView>(R.id.tvProfileMessage)
-
+        val btnLogout = findViewById<Button>(R.id.btnLogout)
+        btnLogout.setOnClickListener { logout() }
         if (userId == -1) {
             tvMessage.text = "User information is missing."
             btnSave.isEnabled = false

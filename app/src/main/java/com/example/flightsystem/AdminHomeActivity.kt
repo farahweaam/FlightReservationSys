@@ -13,6 +13,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 
 class AdminHomeActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -25,7 +26,7 @@ class AdminHomeActivity : ComponentActivity() {
 fun AdminHomeScreen() {
     var selectedFlight by remember { mutableStateOf<Flight?>(null) }
     var selectedTab by remember { mutableStateOf(0) }
-
+    val context = LocalContext.current
     Scaffold(
         bottomBar = {
             if (selectedFlight == null) {
@@ -47,6 +48,12 @@ fun AdminHomeScreen() {
                         onClick = { selectedTab = 2 },
                         icon = {},
                         label = { Text("Flights") }
+                    )
+                    NavigationBarItem(
+                        selected = false,
+                        onClick = { context.logout() },
+                        icon = {},
+                        label = { Text("Logout") }
                     )
                 }
             }

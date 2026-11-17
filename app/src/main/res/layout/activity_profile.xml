@@ -87,6 +87,13 @@
             android:layout_height="wrap_content"
             android:text="Return Back" />
 
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Logout" />
+
         <TextView
             android:id="@+id/tvProfileMessage"
             android:layout_width="match_parent"

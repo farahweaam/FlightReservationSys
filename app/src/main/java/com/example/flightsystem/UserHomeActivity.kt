@@ -17,6 +17,8 @@ import androidx.compose.ui.Alignment
 //samaaa
 import android.content.Intent
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+
 
 
 class UserHomeActivity : ComponentActivity() {
@@ -86,6 +88,13 @@ fun UserHomeScreen(userId: Int) {
                         icon = {},
                         label = { Text("History") }
                     )
+
+//                    NavigationBarItem(
+//                        selected = false,
+//                        onClick = { context.logout() },
+//                        icon = {},
+//                        label = { Text("Logout") }
+//                    )
                 }
             }
         }
@@ -138,14 +147,21 @@ fun UserHomeScreen(userId: Int) {
 
 @Composable
 fun ProfilePlaceholderScreen() {
-    Box(
+    val context = LocalContext.current
+
+    Column(
         modifier = Modifier.fillMaxSize(),
-        contentAlignment = Alignment.Center
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
             text = "Profile Screen - Coming Soon",
             style = MaterialTheme.typography.titleLarge
         )
+        Spacer(Modifier.height(16.dp))
+        Button(onClick = { context.logout() }) {
+            Text("Logout")
+        }
     }
 }
 
