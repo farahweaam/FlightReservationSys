@@ -28,12 +28,7 @@
             android:name=".ProfileActivity"
             android:exported="false" />
 
-        <activity
-            android:name=".AdminFlightsScreen.kt"
-            android:exported="false"
-            android:label="@string/title_activity_admin_flights_screen.kt"
-            android:theme="@style/Theme.FlightSystem"
-            android:windowSoftInputMode="adjustResize" />
+        <activity android:name=".AdminHomeActivity" android:exported="false" />
     </application>
 
 </manifest>

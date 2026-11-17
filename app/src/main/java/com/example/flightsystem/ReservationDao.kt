@@ -26,4 +26,9 @@ interface ReservationDao {
     @Query("SELECT * FROM reservations WHERE userId = :uid AND flightId = :fid LIMIT 1")
     suspend fun getReservationByUserAndFlight(uid: Int, fid: Int): Reservation?
 
+    @Query("SELECT * FROM reservations")
+    suspend fun getAllReservations(): List<Reservation>
+
+
+
 }

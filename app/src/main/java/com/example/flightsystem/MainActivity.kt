@@ -261,6 +261,61 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }*/
+
+        //Enas Testing//
+//        lifecycleScope.launch(Dispatchers.IO) {
+//
+//            if (db.airportDao().getAllAirports().isNullOrEmpty()) {
+//                db.airportDao().insertAirport(Airport(name = "Cairo International", location = "Cairo"))
+//                db.airportDao().insertAirport(Airport(name = "Dubai International", location = "Dubai"))
+//            }
+//
+//            if (db.planeDao().getAllPlanes().isNullOrEmpty()) {
+//                db.planeDao().insertPlane(
+//                    Plane(model = "Boeing 737", aClassSeats = 20, bClassSeats = 100, cClassSeats = 30, totalSeats = 150)
+//                )
+//                db.planeDao().insertPlane(
+//                    Plane(model = "Airbus A320", aClassSeats = 15, bClassSeats = 105, cClassSeats = 30, totalSeats = 150)
+//                )
+//            }
+//
+//            // a user to book for (type "reservation_test" in the booking screen)
+//            if (db.userDao().getUserByUsername("reservation_test") == null) {
+//                db.userDao().insertUser(User(username = "reservation_test", hashedpass = "test_hash"))
+//            }
+//
+//            if (db.flightDao().getAllFlights().isEmpty()) {
+//                val airport = db.airportDao().getAllAirports()!!.first()
+//                val plane = db.planeDao().getAllPlanes()!!.first()
+//                val day = 24 * 60 * 60 * 1000L
+//
+//                db.flightDao().insertFlight(
+//                    Flight(
+//                        destination = "Dubai",
+//                        departure_time = System.currentTimeMillis() + day,
+//                        airportId = airport.id,
+//                        planeId = plane.id,
+//                        aClassPrice = 300.0, bClassPrice = 200.0, cClassPrice = 100.0
+//                    )
+//                )
+//                db.flightDao().insertFlight(
+//                    Flight(
+//                        destination = "London",
+//                        departure_time = System.currentTimeMillis() + 3 * day,
+//                        airportId = airport.id,
+//                        planeId = plane.id,
+//                        aClassPrice = 500.0, bClassPrice = 350.0, cClassPrice = 200.0
+//                    )
+//                )
+//            }
+//
+//            withContext(Dispatchers.Main) {
+//                setContent {
+//                    FlightSystemTheme { AdminHomeScreen() }
+//                }
+//            }
+//        }
+
     }
 }
 
