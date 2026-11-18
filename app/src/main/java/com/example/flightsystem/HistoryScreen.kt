@@ -53,7 +53,7 @@ fun HistoryScreen(userId: Int) {
         } else if (trips.isEmpty()) {
             Text("No completed trips yet.")
         } else {
-            Text("${trips.size} trip(s) Â· Total spent: ${trips.sumOf { it.first.price }}")
+            Text("${trips.size} trip(s) · Total spent: ${trips.sumOf { it.first.price }}")
             Spacer(Modifier.height(12.dp))
 
             LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {

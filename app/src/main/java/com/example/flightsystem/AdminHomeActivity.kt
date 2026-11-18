@@ -72,9 +72,11 @@ fun AdminHomeScreen() {
                 )
             } else {
                 when (selectedTab) {
-                    0 -> AvailableFlightsScreen(onFlightClick = { selectedFlight = it })
+                    0 -> AdminFlightListScreen(onFlightClick = { selectedFlight = it })
                     1 -> AdminReservationsScreen()
                     2 -> AdminFlightsScreen()
+
+
                 }
             }
         }
