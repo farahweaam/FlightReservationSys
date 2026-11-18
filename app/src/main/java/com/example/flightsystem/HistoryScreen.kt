@@ -27,17 +27,17 @@ fun HistoryScreen(userId: Int) {
         trips = withContext(Dispatchers.IO) {
             val reservations = db.reservationDao().getReservationByUserID(userId) ?: emptyList()
             val flights = db.flightDao().getAllFlights()
-            val now = System.currentTimeMillis()
 
             reservations
                 .mapNotNull { r ->
                     flights.firstOrNull { it.id == r.flightId }?.let { f -> r to f }
                 }
-                .filter { (_, f) -> f.departure_time < now }
                 .sortedByDescending { (_, f) -> f.departure_time }
         }
         isLoading = false
     }
+
+    val now = System.currentTimeMillis()
 
     Column(
         modifier = Modifier
@@ -51,9 +51,9 @@ fun HistoryScreen(userId: Int) {
         if (isLoading) {
             CircularProgressIndicator()
         } else if (trips.isEmpty()) {
-            Text("No completed trips yet.")
+            Text("You have no reservations yet.")
         } else {
-            Text("${trips.size} trip(s) · Total spent: ${trips.sumOf { it.first.price }}")
+            Text("${trips.size} reservation(s) · Total: ${trips.sumOf { it.first.price }}")
             Spacer(Modifier.height(12.dp))
 
             LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp)) {
@@ -65,7 +65,7 @@ fun HistoryScreen(userId: Int) {
                                 style = MaterialTheme.typography.titleLarge
                             )
                             Text(
-                                "Flew on: ${
+                                "Departure: ${
                                     SimpleDateFormat(
                                         "dd/MM/yyyy - hh:mm a",
                                         Locale.getDefault()
@@ -82,6 +82,10 @@ fun HistoryScreen(userId: Int) {
                                 }"
                             )
                             Text("Price: ${reservation.price}")
+                            Text(
+                                text = if (flight.departure_time < now) "Completed" else "Upcoming",
+                                color = MaterialTheme.colorScheme.primary
+                            )
                         }
                     }
                 }
