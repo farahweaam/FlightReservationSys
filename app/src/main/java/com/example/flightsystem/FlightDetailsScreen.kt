@@ -18,6 +18,8 @@ import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import androidx.compose.ui.graphics.Color
+
 
 @Composable
 fun FlightDetailsScreen(
@@ -257,14 +259,11 @@ fun FlightDetailsScreen(
                     val isSelected = seat == selectedSeat
 
                     val seatColor = when {
-                        isReserved ->
-                            MaterialTheme.colorScheme.errorContainer
+                        isReserved -> Color.Red
 
-                        isSelected ->
-                            MaterialTheme.colorScheme.tertiaryContainer
+                        isSelected -> Color.Yellow
 
-                        else ->
-                            MaterialTheme.colorScheme.secondaryContainer
+                        else -> Color.Green
                     }
 
                     val textColor = when {
