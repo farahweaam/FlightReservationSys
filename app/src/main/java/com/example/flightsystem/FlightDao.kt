@@ -17,6 +17,11 @@ interface FlightDao {
     @Query("SELECT * FROM flights")
     suspend fun getAllFlights(): List<Flight>
 
+
+    @Query("SELECT * FROM flights WHERE departure_time > :currentTime ORDER BY departure_time ASC")
+    suspend fun getUpcomingFlights(currentTime: Long): List<Flight>
+
+
     @Update
     suspend fun updateFlight(flight: Flight)
 

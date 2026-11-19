@@ -11,6 +11,9 @@ import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import android.util.Patterns
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 
 @Composable
 fun RegisterScreen(onBackToLogin: () -> Unit) {
@@ -19,6 +22,8 @@ fun RegisterScreen(onBackToLogin: () -> Unit) {
     val scope = rememberCoroutineScope()
 
     var username by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var phone by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var confirm by remember { mutableStateOf("") }
     var message by remember { mutableStateOf("") }
@@ -26,7 +31,10 @@ fun RegisterScreen(onBackToLogin: () -> Unit) {
     var isLoading by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier.fillMaxSize().padding(24.dp),
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -41,6 +49,28 @@ fun RegisterScreen(onBackToLogin: () -> Unit) {
             singleLine = true,
             modifier = Modifier.fillMaxWidth()
         )
+
+
+        OutlinedTextField(
+            value = email,
+            onValueChange = { email = it },
+            label = { Text("Email") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(Modifier.height(12.dp))
+
+        OutlinedTextField(
+            value = phone,
+            onValueChange = { phone = it },
+            label = { Text("Phone Number") },
+            singleLine = true,
+            modifier = Modifier.fillMaxWidth()
+        )
+
+        Spacer(Modifier.height(12.dp))
+
 
         Spacer(Modifier.height(12.dp))
 
@@ -76,6 +106,15 @@ fun RegisterScreen(onBackToLogin: () -> Unit) {
                     name.length < 3 -> {
                         isSuccess = false; message = "Username must be at least 3 characters"
                     }
+                    email.isBlank() || phone.isBlank() -> {
+                        isSuccess = false
+                        message = "Please fill in all fields"
+                    }
+
+                    !Patterns.EMAIL_ADDRESS.matcher(email.trim()).matches() -> {
+                        isSuccess = false
+                        message = "Please enter a valid email"
+                    }
                     password.length < 6 -> {
                         isSuccess = false; message = "Password must be at least 6 characters"
                     }
@@ -93,13 +132,24 @@ fun RegisterScreen(onBackToLogin: () -> Unit) {
                             message = "Username already taken"
                         } else {
                             withContext(Dispatchers.IO) {
+
                                 db.userDao().insertUser(
-                                    User(username = name, hashedpass = hashPassword(password))
+                                    User(
+                                        username = name,
+                                        hashedpass = hashPassword(password),
+                                        email = email.trim(),
+                                        phone = phone.trim()
+                                    )
                                 )
+
                             }
                             isSuccess = true
                             message = "Account created! You can log in now."
-                            username = ""; password = ""; confirm = ""
+                            username = ""
+                            email = ""
+                            phone = ""
+                            password = ""
+                            confirm = ""
                         }
                         isLoading = false
                     }

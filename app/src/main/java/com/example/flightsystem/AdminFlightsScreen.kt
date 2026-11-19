@@ -53,19 +53,31 @@ fun AdminFlightsScreen() {
     var flights by remember { mutableStateOf<List<Flight>>(emptyList()) }
     var message by remember { mutableStateOf("") }
 
+
     suspend fun loadFlights() {
         flights = withContext(Dispatchers.IO) {
-            db.flightDao().getAllFlights()
+            db.flightDao().getUpcomingFlights(
+                System.currentTimeMillis()
+            )
         }
     }
 
+
+
     LaunchedEffect(Unit) {
         withContext(Dispatchers.IO) {
-            flights = db.flightDao().getAllFlights()
+            flights = db.flightDao().getUpcomingFlights(
+                System.currentTimeMillis()
+            )
+
             airports = db.airportDao().getAllAirports() ?: emptyList()
             planes = db.planeDao().getAllPlanes() ?: emptyList()
         }
     }
+
+
+
+
 
     Column(
         modifier = Modifier

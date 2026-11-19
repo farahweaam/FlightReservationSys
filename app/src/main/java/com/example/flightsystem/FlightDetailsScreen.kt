@@ -98,6 +98,7 @@ fun FlightDetailsScreen(
     val seatOptions = (1..seatCount.coerceAtLeast(0))
         .map { "$seatPrefix$it" }
 
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -201,7 +202,7 @@ fun FlightDetailsScreen(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Surface(
                     modifier = Modifier.size(12.dp),
-                    color = MaterialTheme.colorScheme.secondaryContainer,
+                    color = Color.Green,
                     shape = RoundedCornerShape(3.dp)
                 ) {}
                 Spacer(modifier = Modifier.width(4.dp))
@@ -211,7 +212,7 @@ fun FlightDetailsScreen(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Surface(
                     modifier = Modifier.size(12.dp),
-                    color = MaterialTheme.colorScheme.errorContainer,
+                     color = Color.Red,
                     shape = RoundedCornerShape(3.dp)
                 ) {}
                 Spacer(modifier = Modifier.width(4.dp))
@@ -221,7 +222,7 @@ fun FlightDetailsScreen(
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Surface(
                     modifier = Modifier.size(12.dp),
-                    color = MaterialTheme.colorScheme.tertiaryContainer,
+                    color = Color.Yellow,
                     shape = RoundedCornerShape(3.dp)
                 ) {}
                 Spacer(modifier = Modifier.width(4.dp))

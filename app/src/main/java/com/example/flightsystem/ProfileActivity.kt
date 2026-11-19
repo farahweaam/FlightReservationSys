@@ -48,9 +48,17 @@ class ProfileActivity : ComponentActivity() {
             if (user != null) {
                 currentUser = user
 
+
                 etUsername.setText(user.username)
+
                 etEmail.setText(user.email)
+
                 etPhone.setText(user.phone)
+
+                if (user.email.isBlank() || user.phone.isBlank()) {
+                    tvMessage.text = "Please complete your email and phone number."
+                }
+
 
             } else {
                 tvMessage.text = "User not found."

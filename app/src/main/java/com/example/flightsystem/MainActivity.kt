@@ -1,336 +1,220 @@
+
 package com.example.flightsystem
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.flightsystem.ui.theme.FlightSystemTheme
-
-import androidx.compose.foundation.layout.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
-
-import androidx.compose.ui.unit.dp
-import androidx.room.Room
-
-import kotlinx.coroutines.Dispatchers
-
-import kotlinx.coroutines.withContext
-import java.time.LocalDateTime
-import java.time.ZoneId
-
-//sama
 import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
         val db = FlightDatabase.getInstance(applicationContext)
-        val flightDao = db.flightDao()
 
-        // comment here
-        // maryam(testingggggg)
+        lifecycleScope.launch {
 
-        lifecycleScope.launch(Dispatchers.IO) {
+            withContext(Dispatchers.IO) {
 
-            // 1. Insert airports if the table is empty
-            if (db.airportDao().getAllAirports().isNullOrEmpty()) {
-                db.airportDao().insertAirport(
-                    Airport(
-                        name = "Cairo International",
-                        location = "Cairo"
-                    )
-                )
+                // =================================
+                // 1. CREATE ADMIN ACCOUNT
+                // =================================
 
-                db.airportDao().insertAirport(
-                    Airport(
-                        name = "Dubai International",
-                        location = "Dubai"
-                    )
-                )
-            }
+                if (db.adminDao().getAdminByUsername("admin") == null) {
 
-            // 2. Insert planes if the table is empty
-            if (db.planeDao().getAllPlanes().isNullOrEmpty()) {
-                db.planeDao().insertPlane(
-                    Plane(
-                        model = "Boeing 737",
-                        aClassSeats = 20,
-                        bClassSeats = 100,
-                        cClassSeats = 30,
-                        totalSeats = 150
-                    )
-                )
-
-                db.planeDao().insertPlane(
-                    Plane(
-                        model = "Airbus A320",
-                        aClassSeats = 15,
-                        bClassSeats = 105,
-                        cClassSeats = 30,
-                        totalSeats = 150
-                    )
-                )
-            }
-
-            // 3. Create a test user if it doesn't exist
-            var testUser = db.userDao()
-                .getUserByUsernameAndPassword("reservation_test", "test_hash")
-
-            if (testUser == null) {
-                db.userDao().insertUser(
-                    User(
-                        username = "reservation_test",
-                        hashedpass = "test_hash"
-                    )
-                )
-
-                testUser = db.userDao()
-                    .getUserByUsernameAndPassword("reservation_test", "test_hash")
-            }
-
-            // 4. Insert a test flight if there are no flights
-            if (db.flightDao().getAllFlights().isEmpty()) {
-
-                val airport = db.airportDao().getAllAirports()!!.first()
-                val plane = db.planeDao().getAllPlanes()!!.first()
-
-                val testFlight = Flight(
-                    destination = "Dubai",
-                    departure_time = System.currentTimeMillis() +
-                            (24 * 60 * 60 * 1000),
-                    airportId = airport.id,
-                    planeId = plane.id,
-                    aClassPrice = 300.0,
-                    bClassPrice = 200.0,
-                    cClassPrice = 100.0
-                )
-
-                db.flightDao().insertFlight(testFlight)
-            }
-
-            // 5. Open the user screen after inserting test data
-            withContext(Dispatchers.Main) {
-                setContent {
-                    FlightSystemTheme {
-                        UserHomeScreen(userId = testUser!!.id)
-                    }
-                }
-            }
-        }
-
-
-
-        /*/sama(for testing AdminFlightsScreen)
-        lifecycleScope.launch(Dispatchers.IO) {
-
-            // Insert airports if the table is empty
-            if (db.airportDao().getAllAirports().isNullOrEmpty()) {
-
-                db.airportDao().insertAirport(
-                    Airport(
-                        name = "Cairo International",
-                        location = "Cairo"
-                    )
-                )
-
-                db.airportDao().insertAirport(
-                    Airport(
-                        name = "Dubai International",
-                        location = "Dubai"
-                    )
-                )
-            }
-
-            // Insert planes if the table is empty
-            if (db.planeDao().getAllPlanes().isNullOrEmpty()) {
-
-                db.planeDao().insertPlane(
-                    Plane(
-                        model = "Boeing 737",
-                        aClassSeats = 20,
-                        bClassSeats = 100,
-                        cClassSeats = 30,
-                        totalSeats = 150
-                    )
-                )
-
-                db.planeDao().insertPlane(
-                    Plane(
-                        model = "Airbus A320",
-                        aClassSeats = 15,
-                        bClassSeats = 105,
-                        cClassSeats = 30,
-                        totalSeats = 150
-                    )
-                )
-            }
-        }
-        setContent {
-            AdminFlightsScreen()
-        }
-
-         */
-
-        /*/Sama : original setcontent fn
-        setContent {
-            FlightSystemTheme {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    // Insert parent records first so the foreign keys are valid
-
-                    // State to hold the list of flights fetched from the database
-                    var flightList by remember { mutableStateOf(listOf<Flight>()) }
-
-                    // Insert a test flight and load the data when the screen launches
-                    LaunchedEffect(key1 = Unit) {
-                        // Run database tasks on an IO thread
-                        kotlinx.coroutines.withContext(Dispatchers.IO) {
-                            // Use system time in milliseconds directly (No java.time API level issues!)
-                            //  val timeInMillis = System.currentTimeMillis()
-
-//                            val testFlight = Flight(
-//                                destination = "Cairo to Dubai",
-//                                departure_time = timeInMillis,
-//                                airportId = 1,
-//                                planeId = 1,
-//                                aClassPrice = 300.0,
-//                                bClassPrice = 200.0,
-//                                cClassPrice = 100.0
-//                            )
-//                            db.airportDao().insertAirport(Airport(id = 1, name = "Cairo International", "Cairo, Egypt"))
-//                            db.planeDao().insertPlane(Plane(id = 1, model = "Boeing 737", 12, 15, 32, 59))
-
-
-                            // Insert into database
-//                            flightDao.insertFlight(testFlight)
-
-                            // Fetch updated list
-                            val fetchedFlights = flightDao.getAllFlights()
-
-                            // Update state back on the main thread
-                            withContext(Dispatchers.Main) {
-                                flightList = fetchedFlights
-                            }
-                        }
-                    }
-
-                    // Simple Composable UI to display the loaded flights
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(24.dp)
-                    ) {
-                        Text(
-                            //text = "Flight Database Test",
-                            text = "Flight Reservation System",
-                            style = MaterialTheme.typography.headlineMedium
+                    db.adminDao().insertAdmin(
+                        Admin(
+                            username = "admin",
+                            hashedpass = hashPassword("admin123")
                         )
-                        Spacer(modifier = Modifier.height(16.dp))
+                    )
+                }
 
-                        if (flightList.isEmpty()) {
-//                            Text(text = "Loading or empty database...")
-                            Text(text = "No flights available yet.")
-                        } else {
-                            for (flight in flightList) {
-                                Card(
-                                    modifier = Modifier
-                                        .fillMaxWidth()
-                                        .padding(vertical = 4.dp)
-                                ) {
-                                    Column(modifier = Modifier.padding(16.dp)) {
-                                        Text(text = "Destination: ${flight.destination}", style = MaterialTheme.typography.bodyLarge)
-                                        Text(text = "Time (Millis): ${flight.departure_time}", style = MaterialTheme.typography.bodyMedium)
-                                        Text(text = "A Class Price: \$${flight.aClassPrice}", style = MaterialTheme.typography.bodySmall)
-                                    }
-                                }
-                            }
-                        }
+                // =================================
+                // 2. INSERT TWO AIRPORTS
+                // =================================
+
+                if (db.airportDao().getAllAirports().isNullOrEmpty()) {
+
+                    db.airportDao().insertAirport(
+                        Airport(
+                            name = "Cairo International",
+                            location = "Cairo"
+                        )
+                    )
+
+                    db.airportDao().insertAirport(
+                        Airport(
+                            name = "Dubai International",
+                            location = "Dubai"
+                        )
+                    )
+                }
+
+                // =================================
+                // 3. INSERT TWO PLANES
+                // =================================
+
+                if (db.planeDao().getAllPlanes().isNullOrEmpty()) {
+
+                    db.planeDao().insertPlane(
+                        Plane(
+                            model = "Boeing 737",
+                            aClassSeats = 20,
+                            bClassSeats = 100,
+                            cClassSeats = 30,
+                            totalSeats = 150
+                        )
+                    )
+
+                    db.planeDao().insertPlane(
+                        Plane(
+                            model = "Airbus A320",
+                            aClassSeats = 15,
+                            bClassSeats = 105,
+                            cClassSeats = 30,
+                            totalSeats = 150
+                        )
+                    )
+                }
+
+                // =================================
+                /*/ 4. CREATE TEST USERS
+                // =================================
+
+                if (db.userDao().getUserByUsername("testuser") == null) {
+
+                    db.userDao().insertUser(
+                        User(
+                            username = "testuser",
+                            hashedpass = hashPassword("user123"),
+                            email = "testuser@gmail.com",
+                            phone = "01012345678"
+                        )
+                    )
+                }
+
+                if (db.userDao().getUserByUsername("testuser2") == null) {
+
+                    db.userDao().insertUser(
+                        User(
+                            username = "testuser2",
+                            hashedpass = hashPassword("user123"),
+                            email = "testuser2@gmail.com",
+                            phone = "01112345678"
+                        )
+                    )
+                }*/
+
+                // =================================
+                // 5. INSERT TEST FLIGHTS
+                // =================================
+
+                if (db.flightDao().getAllFlights().isEmpty()) {
+
+                    val airports =
+                        db.airportDao().getAllAirports() ?: emptyList()
+
+                    val planes =
+                        db.planeDao().getAllPlanes() ?: emptyList()
+
+                    val cairoAirport = airports.firstOrNull {
+                        it.name == "Cairo International"
+                    }
+
+                    val dubaiAirport = airports.firstOrNull {
+                        it.name == "Dubai International"
+                    }
+
+                    val boeing = planes.firstOrNull {
+                        it.model == "Boeing 737"
+                    }
+
+                    val airbus = planes.firstOrNull {
+                        it.model == "Airbus A320"
+                    }
+
+                    if (cairoAirport != null &&
+                        dubaiAirport != null &&
+                        boeing != null &&
+                        airbus != null
+                    ) {
+
+                        val now = System.currentTimeMillis()
+                        val oneDay = 24 * 60 * 60 * 1000L
+
+                        // Past flight: should NOT appear in admin lists
+                        db.flightDao().insertFlight(
+                            Flight(
+                                destination = "Dubai",
+                                departure_time = now - (2 * oneDay),
+                                airportId = cairoAirport.id,
+                                planeId = boeing.id,
+                                aClassPrice = 300.0,
+                                bClassPrice = 200.0,
+                                cClassPrice = 100.0
+                            )
+                        )
+
+                        // Upcoming flight 1
+                        db.flightDao().insertFlight(
+                            Flight(
+                                destination = "Dubai",
+                                departure_time = now + oneDay,
+                                airportId = cairoAirport.id,
+                                planeId = boeing.id,
+                                aClassPrice = 300.0,
+                                bClassPrice = 200.0,
+                                cClassPrice = 100.0
+                            )
+                        )
+
+                        // Upcoming flight 2
+                        db.flightDao().insertFlight(
+                            Flight(
+                                destination = "London",
+                                departure_time = now + (3 * oneDay),
+                                airportId = cairoAirport.id,
+                                planeId = airbus.id,
+                                aClassPrice = 500.0,
+                                bClassPrice = 350.0,
+                                cClassPrice = 200.0
+                            )
+                        )
+
+                        // Upcoming flight 3
+                        db.flightDao().insertFlight(
+                            Flight(
+                                destination = "Paris",
+                                departure_time = now + (5 * oneDay),
+                                airportId = dubaiAirport.id,
+                                planeId = airbus.id,
+                                aClassPrice = 450.0,
+                                bClassPrice = 300.0,
+                                cClassPrice = 150.0
+                            )
+                        )
                     }
                 }
             }
-        }*/
 
-        //Enas Testing//
-//        lifecycleScope.launch(Dispatchers.IO) {
-//
-//            if (db.airportDao().getAllAirports().isNullOrEmpty()) {
-//                db.airportDao().insertAirport(Airport(name = "Cairo International", location = "Cairo"))
-//                db.airportDao().insertAirport(Airport(name = "Dubai International", location = "Dubai"))
-//            }
-//
-//            if (db.planeDao().getAllPlanes().isNullOrEmpty()) {
-//                db.planeDao().insertPlane(
-//                    Plane(model = "Boeing 737", aClassSeats = 20, bClassSeats = 100, cClassSeats = 30, totalSeats = 150)
-//                )
-//                db.planeDao().insertPlane(
-//                    Plane(model = "Airbus A320", aClassSeats = 15, bClassSeats = 105, cClassSeats = 30, totalSeats = 150)
-//                )
-//            }
-//
-//            // a user to book for (type "reservation_test" in the booking screen)
-//            if (db.userDao().getUserByUsername("reservation_test") == null) {
-//                db.userDao().insertUser(User(username = "reservation_test", hashedpass = "test_hash"))
-//            }
-//
-//            if (db.flightDao().getAllFlights().isEmpty()) {
-//                val airport = db.airportDao().getAllAirports()!!.first()
-//                val plane = db.planeDao().getAllPlanes()!!.first()
-//                val day = 24 * 60 * 60 * 1000L
-//
-//                db.flightDao().insertFlight(
-//                    Flight(
-//                        destination = "Dubai",
-//                        departure_time = System.currentTimeMillis() + day,
-//                        airportId = airport.id,
-//                        planeId = plane.id,
-//                        aClassPrice = 300.0, bClassPrice = 200.0, cClassPrice = 100.0
-//                    )
-//                )
-//                db.flightDao().insertFlight(
-//                    Flight(
-//                        destination = "London",
-//                        departure_time = System.currentTimeMillis() + 3 * day,
-//                        airportId = airport.id,
-//                        planeId = plane.id,
-//                        aClassPrice = 500.0, bClassPrice = 350.0, cClassPrice = 200.0
-//                    )
-//                )
-//            }
-//
-//            withContext(Dispatchers.Main) {
-//                setContent {
-//                    FlightSystemTheme { AdminHomeScreen() }
-//                }
-//            }
-//        }
+            // =================================
+            // 6. OPEN NORMAL LOGIN SCREEN
+            // =================================
 
-    }
-}
+            // Clear any previous login session
+            getSharedPreferences("session", MODE_PRIVATE)
+                .edit()
+                .clear()
+                .apply()
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    FlightSystemTheme {
-        Greeting("Android")
+// Open Login page
+            startActivity(Intent(this@MainActivity, LoginActivity::class.java))
+            finish()
+        }
     }
 }
