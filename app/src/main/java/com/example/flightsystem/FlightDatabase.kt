@@ -16,7 +16,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         Plane::class,
         Reservation::class
     ],
-    version = 3
+    version = 4
 )
 abstract class FlightDatabase : RoomDatabase() {
 
@@ -33,13 +33,29 @@ abstract class FlightDatabase : RoomDatabase() {
 
         private val MIGRATION_2_3 = object : Migration(2, 3) {
             override fun migrate(db: SupportSQLiteDatabase) {
-
                 db.execSQL(
                     "ALTER TABLE users ADD COLUMN email TEXT NOT NULL DEFAULT ''"
                 )
 
                 db.execSQL(
                     "ALTER TABLE users ADD COLUMN phone TEXT NOT NULL DEFAULT ''"
+                )
+            }
+        }
+
+        private val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+
+                db.execSQL(
+                    "ALTER TABLE reservations ADD COLUMN seatNumber TEXT"
+                )
+
+                db.execSQL(
+                    """
+                    CREATE UNIQUE INDEX IF NOT EXISTS
+                    index_reservations_flightId_seatNumber
+                    ON reservations(flightId, seatNumber)
+                    """.trimIndent()
                 )
             }
         }
@@ -53,7 +69,7 @@ abstract class FlightDatabase : RoomDatabase() {
                         FlightDatabase::class.java,
                         "flightres_db"
                     )
-                        .addMigrations(MIGRATION_2_3)
+                        .addMigrations(MIGRATION_2_3, MIGRATION_3_4)
                         .build()
                 }
             }

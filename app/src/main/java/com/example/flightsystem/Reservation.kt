@@ -1,4 +1,3 @@
-
 package com.example.flightsystem
 
 import androidx.room.Entity
@@ -13,7 +12,8 @@ import androidx.room.Index
         ForeignKey(Flight::class, ["id"], ["flightId"], onDelete = ForeignKey.CASCADE)
     ],
     indices = [
-        Index(value = ["userId", "flightId"], unique = true)
+        Index(value = ["userId", "flightId"], unique = true),
+        Index(value = ["flightId", "seatNumber"], unique = true)
     ]
 )
 data class Reservation(
@@ -21,5 +21,6 @@ data class Reservation(
     val userId: Int,
     val flightId: Int,
     val classType: Int,
-    val price: Double
+    val price: Double,
+    val seatNumber: String? = null
 )

@@ -26,6 +26,12 @@ interface ReservationDao {
     @Query("SELECT * FROM reservations WHERE userId = :uid AND flightId = :fid LIMIT 1")
     suspend fun getReservationByUserAndFlight(uid: Int, fid: Int): Reservation?
 
+    @Query(" SELECT seatNumber FROM reservations WHERE flightId = :fid AND seatNumber IS NOT NULL")
+    suspend fun getReservedSeats(fid: Int): List<String>
+
+    @Query("SELECT EXISTS( SELECT 1 FROM reservations WHERE flightId = :fid AND seatNumber = :seat)")
+    suspend fun isSeatReserved(fid: Int, seat: String): Boolean
+
     @Query("SELECT * FROM reservations")
     suspend fun getAllReservations(): List<Reservation>
 
